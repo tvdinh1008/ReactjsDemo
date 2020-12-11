@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
-import axios from 'axios';
+
+import { actAddUserRequest, actGetUserRequest, actUpdateUserRequest } from './../../actions/index'
+import { connect } from 'react-redux'
+
 class User extends Component {
 
     constructor(props) {
@@ -21,20 +24,20 @@ class User extends Component {
         var id = match.params.id;
         console.log(id);
         if (id) {
-            axios({
-                method: 'GET',
-                url: `http://localhost:8080/SpringIOT/api/auth/${id}`,
-                data: null,
-                responseType: 'json'
-            }).then(res => {
-                console.log(res);
-                this.setState({
-                    user: res.data,
-                });
-            }).catch(err => {
-                console.log(err);
-            });
+            this.props.onGetUser(id);
         }
+    }
+
+
+    //Được sử dụng bất cứ khi nào mình muốn cập nhật state trước khi render và cập nhật với điều kiện props
+    //nhận được props mới gọi hàm này
+    static getDerivedStateFromProps(nextProps, prevState) {
+        //Gắn user(trong state) bằng user call api qua actions trong store
+        if (nextProps && nextProps.itemEditing && Object.keys(nextProps.itemEditing).length !== 0) {
+            var { itemEditing } = nextProps;
+            return { user: itemEditing }
+        }
+        return prevState;
     }
 
     onChange = (e) => {
@@ -46,7 +49,6 @@ class User extends Component {
         this.setState({
             user: user
         });
-        debugger
     }
 
     onSave = (e) => {
@@ -55,45 +57,11 @@ class User extends Component {
         var { user } = this.state;
 
         if (user.id) {
-            debugger
-            axios({
-                method: 'PUT',
-                url: `http://localhost:8080/SpringIOT/api/auth`,
-                data: JSON.stringify(user),
-                headers:{'Accept': 'application/json','Content-Type': 'application/json'},
-                responseType: 'json'
-            }).then(res => {
-                console.log(res);
-                this.setState({
-                    user: res.data,
-                });
-                debugger
-                this.props.history.goBack();
-            }).catch(err => {
-                console.log(err);
-                debugger
-            });
-
+            this.props.onUpdateUser(user);
+            this.props.history.goBack();
         } else {
-            //thêm mới
-            axios({
-                method: 'POST',
-                url: `http://localhost:8080/SpringIOT/api/auth`,
-                data: JSON.stringify(user),
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                responseType: 'json'
-            }).then(res => {
-                console.log(res);
-                this.setState({
-                    user: res.data,
-                });
-                this.props.history.goBack();
-            }).catch(err => {
-                console.log(err);
-            });
+            this.props.onAddUser(user);
+            this.props.history.goBack();
         }
     }
 
@@ -131,4 +99,26 @@ class User extends Component {
         );
     }
 }
-export default User;
+//Lấy tất cả các props từ store
+const mapStateToProps = state => {
+    return {
+        itemEditing: state.itemEditing //cái này lấy ở index.js trong reducers(nơi lưu store)
+    }
+}
+
+//Lưu lên store
+const mapDispatchToProps = (dispath, props) => {
+    return {
+        onAddUser: (user) => {
+            dispath(actAddUserRequest(user));
+        },
+        onGetUser: (id) => {
+            dispath(actGetUserRequest(id));
+        },
+        onUpdateUser: (user) => {
+            dispath(actUpdateUserRequest(user));
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(User);
