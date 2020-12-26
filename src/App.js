@@ -1,6 +1,6 @@
 //import logo from './logo.svg';
 import React, { Component } from 'react';
-import { BrowserRouter as Router, Route, Link,Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route, Link, Switch } from "react-router-dom";
 import './App.css';
 import About from './components/About';
 import Contact from './components/Contact';
@@ -14,12 +14,15 @@ import Login from './components/Login';
 import NotFound from './components/NotFound';
 import User from './components/user/User';
 import Users from './components/user/Users';
+import { connect } from 'react-redux';
+import PrivateRoute from './components/PrivateRoute';
+
 
 class App extends Component {
 
-
-
   render() {
+    var { auth } = this.props;
+    console.log(auth);
     return (
       <Router>
         <Header />
@@ -51,14 +54,15 @@ class App extends Component {
                 <Route path="/about" component={About} />
                 <Route path="/login" component={Login} />
                 <Route path="/contact" component={Contact} />
-                <Route path="/user-list" exact component={Users} />
+
+                <PrivateRoute path="/user-list" exact={true} roles={['ROLE_ADMIN']} component={Users} />
                 <Route path="/user/add" exact component={User} />
                 <Route path="/user/:id/edit" component={User} />
 
                 <Route path="/device-list" exact component={Devices} />
                 <Route path="/device/add" exact component={Device} />
                 <Route path="/device/:id/edit" component={DeviceData} />
-                <Route component={NotFound}/>
+                <Route component={NotFound} />
               </Switch>
             </div>
           </div>
@@ -70,4 +74,11 @@ class App extends Component {
   }
 }
 
-export default App;
+//Lấy tất cả các props từ store
+const mapStateToProps = state => {
+  return {
+    auth: state.authenticationService //cái này lấy ở index.js trong reducers(nơi lưu store)
+  }
+}
+
+export default connect(mapStateToProps, null)(App);

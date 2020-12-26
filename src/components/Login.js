@@ -26,13 +26,15 @@ class Login extends Component {
 
     onSave = (e) => {
         e.preventDefault();
-        console.log(this.state);
+        const { history } = this.props;
         var { user } = this.state;
+        var {currentUser}=this.props;
         this.props.onLogin(user);
+        if(currentUser){
+            history.push("/");
+        }
     }
-
     
-
     render() {
         var {user}=this.state;
         return (
@@ -66,7 +68,7 @@ class Login extends Component {
 
 const mapStateToProps = state => {
     return {
-        itemEditing: state.itemEditing //cái này lấy ở index.js trong reducers(nơi lưu store)
+        currentUser: state.authenticationService //cái này lấy ở index.js trong reducers(nơi lưu store)
     }
 }
 //Lưu lên store

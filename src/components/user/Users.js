@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
-import axios from 'axios'
 import { connect } from 'react-redux';
 import { actFetchUsersRequest, actDeleteUserRequest } from './../../actions/index';
 
@@ -67,17 +66,7 @@ class Users extends Component {
   render() {
     var { users } = this.props;//gọi ở redux
     //var { users } = this.state;
-    debugger
     var url = "/user";
-    var result = users.map((user, index) => {
-      return (
-        <Link to={`${url}/${user.username}`} key={index}>
-          <li className="list-group-item">
-            {user.id} --{user.full_name}--{user.username}--{user.roleDto.name}
-          </li>
-        </Link>
-      );
-    });
     var tbody = users.map((user, index) => {
       return (
         <tr key={index}>
