@@ -16,6 +16,7 @@ import User from './components/user/User';
 import Users from './components/user/Users';
 import { connect } from 'react-redux';
 import PrivateRoute from './components/PrivateRoute';
+import AccessDenied from './components/AccessDenied';
 
 
 class App extends Component {
@@ -54,6 +55,8 @@ class App extends Component {
                 <Route path="/about" component={About} />
                 <Route path="/login" component={Login} />
                 <Route path="/contact" component={Contact} />
+                
+                <Route path="/accessdenied" exact component={AccessDenied}/>
 
                 <PrivateRoute path="/user-list" exact={true} roles={['ROLE_ADMIN']} component={Users} />
                 <Route path="/user/add" exact component={User} />

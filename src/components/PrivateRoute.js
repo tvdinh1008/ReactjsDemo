@@ -16,7 +16,7 @@ export const PrivateRoute = ({ auth,component: Component, roles, ...rest }) => (
         //check quyền vào dựa vào roles truyền vào và roles của currentUser
         if (roles && Object.keys(auth).length!==0 &&roles.indexOf(auth.authorities[0].authority) === -1) {
             //Nếu bị hạn chế vai trò(Giả sử user chỉ có 1 quyền nên check vậy là ok)
-            return <Redirect to={{ pathname: '/' }} />
+            return <Redirect to={{ pathname: '/accessdenied' }} />
         }
 
         //TH được quyền vào link
