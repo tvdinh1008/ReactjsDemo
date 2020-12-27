@@ -13,12 +13,12 @@ import axios from 'axios';
 
 //Thay vì phải callApi trong component thì ta sẽ call ở actions luôn
 export const actFetchUsersRequest = () => {
-    var jwt=localStorage.getItem("token");
+    var jwt = localStorage.getItem("token");
     return (dispatch) => {
         return axios({
             method: 'GET',
             url: 'http://localhost:8080/SpringIOT/api/auth/list',
-            data: null, 
+            data: null,
             headers: { 'Accept': 'application/json', 'Content-Type': 'application/json', 'Authorization': `Bearer ${jwt}` },
             responseType: 'json'
         }).then(res => {
@@ -185,4 +185,12 @@ export const actFetchDevices = (devices) => {
         type: Type.FETCH_DEVICES,
         devices
     }
+}
+
+export const actLogout = () => (dispatch) => {
+    localStorage.removeItem("state");
+    localStorage.removeItem("token");
+    dispatch({
+        type: Type.LOGOUT
+    });
 }

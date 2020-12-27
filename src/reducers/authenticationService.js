@@ -6,7 +6,10 @@ var initialState = {
 const authenticationService = (state = initialState, action) => {
     switch (action.type) {
         case Type.LOGIN_USER:
-            return {...state, currentUser:action.user}
+            return { ...state, currentUser: action.user }
+
+        case Type.LOGOUT:
+            return { ...state, currentUser: null }
         default:
             return state;
     }

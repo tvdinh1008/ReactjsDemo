@@ -17,13 +17,18 @@ import Users from './components/user/Users';
 import { connect } from 'react-redux';
 import PrivateRoute from './components/PrivateRoute';
 import AccessDenied from './components/AccessDenied';
-
+import { actLogout } from './actions/index';
 
 class App extends Component {
 
+  logOut = () => {
+    this.props.onLogout();
+  }
+
+
   render() {
     var { auth } = this.props;
-    console.log(auth);
+    var currentUser = auth.currentUser;
     return (
       <Router>
         <Header />
@@ -45,18 +50,29 @@ class App extends Component {
               <h1>Content page</h1>
               <Link to="/">Trang chủ</Link>
               <br></br>
-              <Link to="/login">Login</Link>
-              <br></br>
               <Link to="/user-list">Danh sách user</Link>
               <br></br>
               <Link to="/device-list">Danh sách device</Link>
+              <br></br>
+              {
+                (currentUser && Object.keys(currentUser).length !== 0) ? (
+                  <a href="/" onClick={this.logOut}>
+                    LogOut
+                  </a>
+                ) : (
+                    <Link to={"/login"}>Login</Link>
+                  )
+
+              }
+
+
               <Switch>
                 <Route path="/" exact component={Home} />
                 <Route path="/about" component={About} />
                 <Route path="/login" component={Login} />
                 <Route path="/contact" component={Contact} />
-                
-                <Route path="/accessdenied" exact component={AccessDenied}/>
+
+                <Route path="/accessdenied" exact component={AccessDenied} />
 
                 <PrivateRoute path="/user-list" exact={true} roles={['ROLE_ADMIN']} component={Users} />
                 <Route path="/user/add" exact component={User} />
@@ -83,5 +99,13 @@ const mapStateToProps = state => {
     auth: state.authenticationService //cái này lấy ở index.js trong reducers(nơi lưu store)
   }
 }
+//Lưu lên store
+const mapDispatchToProps = (dispath, props) => {
+  return {
+    onLogout: () => {
+      dispath(actLogout());
+    }
+  }
+}
 
-export default connect(mapStateToProps, null)(App);
+export default connect(mapStateToProps, mapDispatchToProps)(App);
