@@ -17,6 +17,11 @@ class Footer extends Component {
                         <div className="col-md-3" />
                         <div className="col-md-3 text-right small align-self-end">©2020 Brand, Inc.</div>
                     </div>
+                    <div className="row">
+                        <p className="copyright-text">Copyright &copy; 2020 All Rights Reserved by
+                            <a href="#">Trần Văn Định</a>.
+                        </p>
+                    </div>
                 </div>
             </footer>
         );

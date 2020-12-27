@@ -17,13 +17,10 @@ import Users from './components/user/Users';
 import { connect } from 'react-redux';
 import PrivateRoute from './components/PrivateRoute';
 import AccessDenied from './components/AccessDenied';
-import { actLogout } from './actions/index';
 
 class App extends Component {
 
-  logOut = () => {
-    this.props.onLogout();
-  }
+  
 
 
   render() {
@@ -33,6 +30,7 @@ class App extends Component {
       <Router>
         <Header />
         <div className="container">
+          {/*
           <div className="row">
             <div className="col">
               <nav>
@@ -44,6 +42,7 @@ class App extends Component {
               </nav>
             </div>
           </div>
+           */}
           {/* Nội dung*/}
           <div className="row">
             <div className="col">
@@ -54,18 +53,7 @@ class App extends Component {
               <br></br>
               <Link to="/device-list">Danh sách device</Link>
               <br></br>
-              {
-                (currentUser && Object.keys(currentUser).length !== 0) ? (
-                  <a href="/" onClick={this.logOut}>
-                    LogOut
-                  </a>
-                ) : (
-                    <Link to={"/login"}>Login</Link>
-                  )
-
-              }
-
-
+              
               <Switch>
                 <Route path="/" exact component={Home} />
                 <Route path="/about" component={About} />
@@ -99,13 +87,5 @@ const mapStateToProps = state => {
     auth: state.authenticationService //cái này lấy ở index.js trong reducers(nơi lưu store)
   }
 }
-//Lưu lên store
-const mapDispatchToProps = (dispath, props) => {
-  return {
-    onLogout: () => {
-      dispath(actLogout());
-    }
-  }
-}
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(mapStateToProps, null)(App);
